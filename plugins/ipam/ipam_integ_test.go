@@ -56,6 +56,7 @@ func TestGetExistedIP(t *testing.T) {
 			"ipam": {
 				"type": "ipam",
 				"ipv4-address": "10.0.0.2/24",
+				"id": "TestGetExistedIP",
 				"timeout": "5s",
 				"ipv4-subnet": "10.0.0.0/24",
 				"ipv4-gateway": "10.0.0.8",
@@ -87,6 +88,7 @@ func TestGetAvailableIPv4(t *testing.T) {
 				"timeout": "5s",
 				"ipv4-subnet": "10.0.0.0/24",
 				"ipv4-gateway": "10.0.0.8",
+				"id": "TestGetExistedIP",
 				"ipv4-routes": [
 				{"dst": "192.168.2.3/32"}
 				]
@@ -130,6 +132,7 @@ func TestDel(t *testing.T) {
 				"type": "ipam",
 				"timeout": "5s",
 				"ipv4-subnet": "10.0.0.0/24",
+				"id": "TestDel",
 				"ipv4-address": "10.0.0.3/24",
 				"ipv4-gateway": "10.0.0.8",
 				"ipv4-routes": [

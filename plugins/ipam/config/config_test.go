@@ -46,6 +46,7 @@ func TestInvalidIPV4Address(t *testing.T) {
 			"cniVersion": "0.3.0",
 			"ipam": {
 				"type": "ipam",
+				"id": "TestInvalidIPV4Address",
 				"ipv4-subnet": "10.0.0.0/24",
 				"ipv4-address": "%s"
 			}
@@ -71,6 +72,7 @@ func TestIPNotINSubnet(t *testing.T) {
 			"cniVersion": "0.3.0",
 			"ipam": {
 				"type": "ipam",
+				"id": "TestIPNotINSubnet",
 				"ipv4-gateway": "10.0.0.1",
 				"ipv4-subnet": '10.0.0.0/24'
 				"ipv4-address": "10.0.1.2/24"
@@ -88,6 +90,7 @@ func TestGatewayNotINSubnet(t *testing.T) {
 			"cniVersion": "0.3.0",
 			"ipam": {
 				"type": "ipam",
+				"id": "TestGatewayNotINSubnet",
 				"ipv4-gateway": "10.0.1.1",
 				"ipv4-subnet": '10.0.0.0/24'
 				"ipv4-address": "10.0.0.2/24"
@@ -105,6 +108,7 @@ func TestIPIsNetworkAddress(t *testing.T) {
 			"cniVersion": "0.3.0",
 			"ipam": {
 				"type": "ipam",
+				"id": "TestIPIsNetworkAddress",
 				"ipv4-gateway": "10.0.0.1",
 				"ipv4-subnet": "10.0.0.0/24",
 				"ipv4-address": "10.0.0.0/24"
@@ -122,6 +126,7 @@ func TestIPIsBroadcastAddress(t *testing.T) {
 			"cniVersion": "0.3.0",
 			"ipam": {
 				"type": "ipam",
+				"id": "TestIPIsBroadcastAddress",
 				"ipv4-gateway": "10.0.0.1",
 				"ipv4-subnet": "10.0.0.0/24",
 				"ipv4-address": "10.0.0.255/24"
@@ -139,6 +144,7 @@ func TestGWIsNetworkAddress(t *testing.T) {
 			"cniVersion": "0.3.0",
 			"ipam": {
 				"type": "ipam",
+				"id": "TestGWIsNetworkAddress",
 				"ipv4-gateway": "10.0.0.0",
 				"ipv4-subnet": "10.0.0.0/24",
 				"ipv4-address": "10.0.0.2/24"
@@ -156,6 +162,7 @@ func TestGWIsBroadcastAddress(t *testing.T) {
 			"cniVersion": "0.3.0",
 			"ipam": {
 				"type": "ipam",
+				"id": "TestGWIsNetworkAddress",
 				"ipv4-gateway": "10.0.1.255",
 				"ipv4-subnet": "10.0.0.0/24",
 				"ipv4-address": "10.0.0.2/24"
@@ -173,6 +180,7 @@ func TestEmptySubnet(t *testing.T) {
 			"cniVersion": "0.3.0",
 			"ipam": {
 				"type": "ipam",
+				"id": "TestEmptySubnet",
 				"ipv4-gateway": "10.0.0.1",
 				"ipv4-address": "10.0.0.2/24"
 			}
@@ -189,6 +197,7 @@ func TestDefaultGateway(t *testing.T) {
 			"cniVersion": "0.3.0",
 			"ipam": {
 				"type": "ipam",
+				"id": "TestDefaultGateway",
 				"ipv4-address": "10.0.0.2/24",
 				"ipv4-subnet": "10.0.0.0/24"
 			}
@@ -206,6 +215,7 @@ func TestIPv4HappyPath(t *testing.T) {
 			"cniVersion": "0.3.0",
 			"ipam": {
 				"type": "ipam",
+				"id": "TestInvalidIPV4Address",
 				"ipv4-address": "10.0.0.2/16",
 				"ipv4-subnet": "10.0.0.0/16",
 				"ipv4-gateway": "10.0.0.8",

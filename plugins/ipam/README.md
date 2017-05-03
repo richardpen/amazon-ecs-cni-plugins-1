@@ -9,6 +9,7 @@ network namespace. An example of this configuration looks like:
 {
     "ipam": {
        "type": "ipam",
+       "id": "12345",
         "ipv4-address": "10.0.0.2/24",
         "ipv4-gateway": "10.0.0.1",
         "ipv4-subnet": "10.0.0.0/24",
@@ -20,6 +21,7 @@ network namespace. An example of this configuration looks like:
 }
 ```
 ## Parameter
+* `id` (string, required): id of this request which is unique to each of the ip address.
 * `ipv4-address` (string, optional): ipv4 address of the veth inside the
 container network namespace.
 * `ipv4-routes` (string, optional): list of routes to add to the container network

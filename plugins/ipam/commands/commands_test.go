@@ -54,6 +54,7 @@ func setup(subnetStr, ipStr, gwStr string, t *testing.T) (*config.IPAMConfig, *m
 		IPV4Subnet:  types.IPNet{IP: subnet.IP, Mask: subnet.Mask},
 		IPV4Address: types.IPNet{IP: ip.IP, Mask: ip.Mask},
 		IPV4Gateway: gw,
+		ID:          "id",
 	}
 
 	mockCtrl := gomock.NewController(t)
@@ -215,7 +216,7 @@ func TestUpdateFail(t *testing.T) {
 	conf, allocator := setup("10.0.0.0/29", "10.0.0.2/29", "", t)
 
 	gomock.InOrder(
-		allocator.EXPECT().Release("10.0.0.2").Return(nil),
+		allocator.EXPECT().ReleaseByValue(conf.ID).Return("10.0.0.2", nil),
 		allocator.EXPECT().Update(config.LastKnownIPKey, conf.IPV4Address.IP.String()).Return(errors.New("update fail")),
 	)
 
@@ -227,7 +228,7 @@ func TestDelReleaseError(t *testing.T) {
 	conf, allocator := setup("10.0.0.0/29", "10.0.0.2/29", "", t)
 
 	gomock.InOrder(
-		allocator.EXPECT().Release("10.0.0.2").Return(errors.New("failed to query the db")),
+		allocator.EXPECT().ReleaseByValue(conf.ID).Return("", errors.New("failed to query the db")),
 	)
 
 	err := del(allocator, conf)

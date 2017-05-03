@@ -51,6 +51,7 @@ type IPAllocator interface {
 	Get(string) (string, error)
 	Assign(string, string) error
 	Update(string, string) error
+	ReleaseByValue(string) (string, error)
 	Release(string) error
 	Exists(string) (bool, error)
 	SetLastKnownIP(net.IP)
@@ -90,7 +91,7 @@ func (manager *IPManager) GetAvailableIP(id string) (string, error) {
 		if err != nil {
 			return "", err
 		}
-		err = manager.Assign(nextIP.String(), time.Now().UTC().String())
+		err = manager.Assign(nextIP.String(), id)
 		if err != nil && err != store.ErrKeyExists {
 			log.Debugf("query to the db failed, err: %v", err)
 			return "", err
@@ -136,6 +137,27 @@ func (manager *IPManager) Assign(ip string, id string) error {
 
 	manager.lastKnownIP = net.ParseIP(ip)
 	return nil
+}
+
+// ReleaseByValue release the key-value pair by value
+func (manager *IPManager) ReleaseByValue(value string) (string, error) {
+	// TODO improve this part by implement listing all the kv pairs or pas in the prefix
+	kvPairs, err := manager.client.List("1")
+	if err != nil {
+		return "", errors.Wrapf(err, "releaseByValue ipstore: failed to list the key-value pairs in db")
+	}
+
+	var ipDeleted string
+	for _, kvPair := range kvPairs {
+		if string(kvPair.Value) == value {
+			err = manager.Release(kvPair.Key)
+			if err != nil {
+				return "", err
+			}
+			ipDeleted = kvPair.Key
+		}
+	}
+	return ipDeleted, nil
 }
 
 // Release marks the ip as available or return an error if
