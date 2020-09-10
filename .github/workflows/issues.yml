@@ -1,0 +1,49 @@
+name: test job dependency
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  check_rollback:
+    runs-on: ubuntu-latest
+    steps:
+      - id: check_issue_title
+        run: |
+          title=$(cat ${GITHUB_EVENT_PATH} | jq -r ".issue.title")
+          if [ "${title}" = "PROD ROLLBACK" ]; then
+            echo "::set-output name=result::true"
+          else
+            echo "::set-output name=result::false"
+          fi
+    outputs:
+      is_rollback: ${{ steps.check_issue_title.outputs.result }}
+  output_result:
+    needs: check_rollback
+    runs-on: ubuntu-latest
+    steps:
+      - name: check
+        run: echo ${{ needs.check_rollback.outputs.is_rollback }}
+  prod_rollback:
+    needs: check_rollback
+    if: ${{ needs.check_rollback.outputs.is_rollback == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: roll back
+        run: |
+          echo "roll back prod"
+          issue_body=$(cat $GITHUB_EVENT_PATH | jq -r ".issue.body")
+          echo "issue body " ${issue_body}
+          releases=$(echo ${issue_body} | jq -r -c ".releases []")
+          echo "${releases}"
+          for release in ${releases};
+          do 
+            echo "rollback " $release
+          done
+  execute:
+    needs: check_rollback
+    if: ${{ needs.check_rollback.outputs.is_rollback == 'false' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: post
+        run: |
+          echo "executing jobs"

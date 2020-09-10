@@ -1,32 +1,11 @@
-<!--
-Please make sure you've read and understood our contributing guidelines;
-https://github.com/aws/amazon-ecs-init/blob/master/CONTRIBUTING.md
+## Why
 
-Please provide the following information:
--->
+This is a place for high-level explanations, and should keep implementation/engineering details to the minimum. What was the motivation for this code change? Is this part of a larger job? Does it have a ticket? Is it a hotfix? etc.
 
-### Summary
-<!-- What does this pull request do? -->
+## What
 
-### Implementation details
-<!-- How are the changes implemented? -->
+Provide more implementation/engineering details in this section. Ideally each set of code changes does a specific thing. If your diff does 10 things, I may ask why it isn't 10 different PRs. Help the reviewers by keeping it tidy and by providing information that aids understanding of your code.
 
-### Testing
-<!-- How was this tested? -->
+## Why do you think this works?
 
-New tests cover the changes: <!-- yes|no -->
-
-### Description for the changelog
-<!--
-Write a short (one line) summary that describes the changes in this
-pull request for inclusion in the changelog. Prefix the summary with an
-indication of the change type, Feature, Enhancement, or Bug. Here is an example:
-Feature - Upgrade the something library to the latest stable version 1.2.3
--->
-
-### Licensing
-<!--
-Please confirm that this contribution is under the terms of the Apache 2.0
-License.
--->
-This contribution is under the terms of the Apache 2.0 License: <!-- yes -->
+You've written tests of course, but there may be some other things you did or looked at in the process of evaluating the code, don't be shy, list 'em.
