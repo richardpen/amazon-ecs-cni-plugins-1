@@ -6,9 +6,11 @@ labels: ''
 assignees: ''
 
 ---
-
-```json
 {
-  "releases": ["release 1", "release 2"]
+  "releases": [
+    "backend-api-prod",
+    "backend-celery-prod",
+    "backend-reporting-prod",
+    "backend-scheduled-tasks-prod"
+  ]
 }
-```

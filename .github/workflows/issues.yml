@@ -1,28 +1,39 @@
-name: test job dependency
+name: Job Executor
 on:
   issues:
     types: [opened]
 
+env: # Or as an environment variable
+  ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
+  ARTIFACTORY_ENCRYPTED_PASS: ${{ secrets.ARTIFACTORY_ENCRYPTED_PASS }}
+  EKS_ROLE: arn:aws:iam::066560491281:role/eks/primary-work-load-EKS_CICD
+  KUBEDOG_CACHE_PATH: /usr/local/bin/kubedog
+  KUBEDOG_VERSION: v0.3.4
+  EKS_NAMESPACE: backend
 jobs:
+  # Check if this issue is for a prod rollback
   check_rollback:
     runs-on: ubuntu-latest
+    outputs:
+      is_rollback: ${{ steps.check_issue_title.outputs.result }}
     steps:
+      - name: update github action url
+        run: |
+          GITHUB_WORKFLOW_URL=https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          comments_url=$(cat $GITHUB_EVENT_PATH | jq -r .issue.comments_url)
+          curl --include --verbose --fail \
+          -H "Content-Type: application/json" \
+          -H "Authorization: token ${{ github.token }}" \
+          --request POST --data '{"body": "Check the status of your job [here]('$GITHUB_WORKFLOW_URL')"}' \
+          $comments_url
       - id: check_issue_title
         run: |
-          title=$(cat ${GITHUB_EVENT_PATH} | jq -r ".issue.title")
+          title=$(cat $GITHUB_EVENT_PATH | jq -r ".issue.title")
           if [ "${title}" = "PROD ROLLBACK" ]; then
             echo "::set-output name=result::true"
           else
             echo "::set-output name=result::false"
           fi
-    outputs:
-      is_rollback: ${{ steps.check_issue_title.outputs.result }}
-  output_result:
-    needs: check_rollback
-    runs-on: ubuntu-latest
-    steps:
-      - name: check
-        run: echo ${{ needs.check_rollback.outputs.is_rollback }}
   prod_rollback:
     needs: check_rollback
     if: ${{ needs.check_rollback.outputs.is_rollback == 'true' }}
@@ -30,14 +41,11 @@ jobs:
     steps:
       - name: roll back
         run: |
-          echo "roll back prod"
           issue_body=$(cat $GITHUB_EVENT_PATH | jq -r ".issue.body")
-          echo "issue body " ${issue_body}
-          releases=$(echo ${issue_body} | jq -r -c ".releases []")
-          echo "${releases}"
+          releases=$(echo ${issue_body} | jq -r ".releases []")
           for release in ${releases};
-          do 
-            echo "rollback " $release
+          do
+            echo "Rolling back release: ${release} ${EKS_NAMESPACE}"$
           done
   execute:
     needs: check_rollback
@@ -45,5 +53,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: post
-        run: |
-          echo "executing jobs"
+        run: echo "starting jobs"
